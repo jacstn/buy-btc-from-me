@@ -1,0 +1,21 @@
+version: "3"
+services:
+  node-app:
+    build: .
+    ports:
+      - "3000:${PORT}"
+    volumes:
+      - ./:/app:ro
+      - /app/node_modules
+      - /app/dist
+    environment:
+      - PORT=${PORT}
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS_PROD}
