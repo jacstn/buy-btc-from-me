@@ -1,0 +1,3 @@
+export enum EOrderStatus {
+    INIT = "INIT", PAYMENT_COMPLEATED="PAYM_COMPL", ABORTED="ABORTED"
+}
