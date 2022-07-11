@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import { router } from './router';
+require('dotenv').config()
 const cors = require('cors');
 
 
@@ -17,8 +18,6 @@ const corsOpts = {
     creditials: true,
 
 }
-
-require('dotenv').config()
 
 const app: Application = express();
 app.use(express.json())

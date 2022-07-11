@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { ValidationError } from 'joi'
 
+
 const validate = (schema: any) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error }: { error: ValidationError } = schema.validate(req.body);
