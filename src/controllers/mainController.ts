@@ -32,6 +32,7 @@ const mainController = {
         console.log(omiseResult)
         res.send(200)
     },
+
     getOmisePublicKey: (req: Request, res: Response) => {
         try {
             return res.send({
@@ -41,6 +42,7 @@ const mainController = {
             console.log(e)
         }
     },
+
     createOrder: async (req: Request, res: Response) => {
         const order = { ...req.body, status: EOrderStatus.INIT }
         try {
@@ -85,9 +87,9 @@ const mainController = {
 
         exec(command, (error: any, stdout: any, stderr: any) => {
             if (stdout) {
-                return res.send({balance: stdout})
+                return res.send({ balance: stdout })
             }
-            return res.sendStatus(404)
+            return res.send({ balance: 0 })
         });
     }
 }
