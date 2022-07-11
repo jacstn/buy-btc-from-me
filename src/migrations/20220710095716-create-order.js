@@ -8,12 +8,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      amount: {
-        type: Sequelize.DECIMAL(12, 8),
+      btcAmount: {
+        type: Sequelize.DECIMAL(12,8),
+        allowNull: false,
+      },
+      usdAmount: {
+        type: Sequelize.DECIMAL(10,2),
         allowNull: false,
       },
       address: {
-        type: Sequelize.STRING(35),
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
       status: {

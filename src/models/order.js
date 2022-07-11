@@ -6,12 +6,16 @@ module.exports = function(sequelize, DataTypes) {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      amount: {
+      btcAmount: {
         type: DataTypes.DECIMAL(12,8),
         allowNull: false,
       },
+      usdAmount: {
+        type: DataTypes.DECIMAL(10,2),
+        allowNull: false,
+      },
       address: {
-        type: DataTypes.STRING(35),
+        type: DataTypes.STRING(50),
         allowNull: false,
       },
       status: {

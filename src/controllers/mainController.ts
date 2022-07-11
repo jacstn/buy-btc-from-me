@@ -2,35 +2,46 @@ import { Request, Response } from 'express';
 import { EOrderStatus } from '../misc/order-status';
 import { Kraken } from "node-kraken-api";
 import { EBitcoinCliCommands, getBitcoinCliCommand } from '../misc/bitcoin-cli-commands';
+
 const { exec } = require('child_process')
 const models: any = require('./../models')
 
 const mainController = {
     charge: async (req: Request, res: Response) => {
-        const order = await models.Orders.findOne({
+        const order = await models.Order.findOne({
             where: {
                 id: req.body.orderId
             }
         })
 
         if (!order) {
-            return res.status(404).send("order not found")
+            return res.status(400).send("order not found")
         }
 
         const omise = require('omise')({
             secretKey: process.env.OMISE_SKEY
         })
-
-        const omiseResult = omise.charges.create({
+        const paymentObject = {
             'description': 'Payment for BTC',
-            'amount': '100000',
+            'amount': (order.usdAmount * 100).toFixed(0),
             'currency': 'usd',
-            'capture': false,
+            'capture': true,
             'card': req.body.omiseToken
-        })
+        }
+        try {
+            console.log(paymentObject)
+            const omiseResult = await omise.charges.create(paymentObject)
 
-        console.log(omiseResult)
-        res.send(200)
+            console.log(omiseResult)
+            if (omiseResult.object==='charge' && omiseResult.status==='successful') {
+                order.status = EOrderStatus.SUCCESS
+                await order.save()
+            }
+            res.send(200)
+        } catch (e) {
+            console.error(e)
+            return res.sendStatus(500)
+        }
     },
 
     getOmisePublicKey: (req: Request, res: Response) => {
