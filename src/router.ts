@@ -8,7 +8,9 @@ const router = Router()
 router.get("/omise-public-key", mainController.getOmisePublicKey);
 router.post("/charge", validate(schemas.newCharge), mainController.charge);
 router.post("/order", validate(schemas.newOrder), mainController.createOrder);
+router.get('/order', mainController.listOrders);
 router.get("/btc-price", mainController.getBtcPrice);
 router.get("/validate-address/:address", mainController.validateAddress);
 router.get('/balance', mainController.getAvailableBalance);
+
 export { router }

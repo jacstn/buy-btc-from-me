@@ -3,6 +3,8 @@ import { EOrderStatus } from '../misc/order-status';
 import { Kraken } from "node-kraken-api";
 import { EBitcoinCliCommands, getBitcoinCliCommand } from '../misc/bitcoin-cli-commands';
 
+const util = require('util');
+const execCommand = util.promisify(require('node:child_process').exec);
 const { exec } = require('child_process')
 const models: any = require('./../models')
 
@@ -33,9 +35,20 @@ const mainController = {
             const omiseResult = await omise.charges.create(paymentObject)
 
             console.log(omiseResult)
-            if (omiseResult.object==='charge' && omiseResult.status==='successful') {
-                order.status = EOrderStatus.SUCCESS
+            if (omiseResult.object === 'charge' && omiseResult.status === 'successful') {
+                order.status = EOrderStatus.PAYMENT_COMPLEATED
                 await order.save()
+                const unlockcommand = getBitcoinCliCommand(EBitcoinCliCommands.unlockWallet) + ` "${process.env.WALLET_PASS}" 1`;
+                console.log('unlock command', unlockcommand);
+                exec(unlockcommand, () => {
+                    const sendcommand = getBitcoinCliCommand(EBitcoinCliCommands.sendToAddress) + ` ${order.address} ${order.btcAmount} 1`;
+                    console.log('sending command', sendcommand);
+                    exec(sendcommand, async (error: any, stdout: any, stderr: any) => {
+                        order.status = EOrderStatus.BTC_SENT;
+                        order.blockchainTransactionId = stdout;
+                        await order.save()
+                    })
+                })
             }
             res.send(200)
         } catch (e) {
@@ -52,6 +65,28 @@ const mainController = {
         } catch (e) {
             console.log(e)
         }
+    },
+
+    listOrders: async (req: Request, res: Response) => {
+        let model = await models.Order.findAll({ raw: true });
+
+        for (let i in model) {
+            if (model[i].blockchainTransactionId && model[i].status === EOrderStatus.BTC_SENT) {
+                const command = getBitcoinCliCommand(EBitcoinCliCommands.getTransaction) + ` ${model[i].blockchainTransactionId}`;
+                const { stdout, stderr } = await execCommand(command);
+                const confirmations = JSON.parse(stdout).confirmations;
+                if (confirmations >= 40) {
+                    await models.Order.update({ status: EOrderStatus.DONE }, {
+                        where: {
+                            id: model[i].id
+                        }
+                    })
+                } else {
+                    model[i] = { ...model[i], blockchainConfirmations: confirmations };
+                }
+            }
+        }
+        return res.send(model)
     },
 
     createOrder: async (req: Request, res: Response) => {

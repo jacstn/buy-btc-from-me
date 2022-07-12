@@ -20,6 +20,10 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: false,
       },
+      blockchainTransactionId: {
+        type: Sequelize.STRING(80),
+        allowNull: true,
+      },
       status: {
         allowNull: false,
         type: Sequelize.STRING(10),

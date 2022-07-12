@@ -18,6 +18,10 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING(50),
         allowNull: false,
       },
+      blockchainTransactionId: {
+        type: DataTypes.STRING(80),
+        allowNull: true,
+      },
       status: {
         allowNull: false,
         type: DataTypes.STRING(10),
