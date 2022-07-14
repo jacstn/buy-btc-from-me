@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "./sync-database.sh;node dist/app.js",
     "dev": "nodemon src/app.ts",
     "build": "./node_modules/typescript/bin/tsc",
     "test": "NODE_ENV=test mocha src/test/*.test.ts --loader=ts-node/esm --extension ts"

@@ -5,5 +5,5 @@ RUN npm install
 COPY . ./
 RUN npm run build
 EXPOSE 3333
-RUN ls -all
+RUN chmod +x ./sync-database.sh
 CMD ["npm", "start"]

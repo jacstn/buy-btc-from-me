@@ -20,7 +20,7 @@ module.exports = {
     "password": process.env.MYSQL_PASS_PROD,
     "database": process.env.MYSQL_DB_PROD,
     "host": process.env.MYSQL_SERVER_PROD,
-    "logging": false,
+    "logging": true,
     "dialect": "mysql"
   }
 }

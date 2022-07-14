@@ -3,13 +3,15 @@ services:
   node-app:
     build: .
     ports:
-      - "3000:${PORT}"
+      - "3333:3333"
     volumes:
-      - ./:/app:ro
+      - ./:/app
       - /app/node_modules
       - /app/dist
     environment:
-      - PORT=${PORT}
+      - PORT=3333
+    env_file:
+      - ./.env
     depends_on:
       - mysql
   mysql:
@@ -18,4 +20,10 @@ services:
     restart: always
     platform: linux/amd64
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS_PROD}
+      MYSQL_ROOT_PASSWORD: "thisispassword"
+  bitcoin-core:
+    image: ruimarinho/bitcoin-core
+    ports:
+      - "18443:18443"
+      - "18444:18444"
+    command: -printtoconsole -testnet -rpcallowip=172.17.0.0/16 -rpcbind=0.0.0.0 -rpcauth='foo:7d9ba5ae63c3d4dc30583ff4fe65a67e$$9e3634e81c11659e3de036d0bf88f89cd169c1039e6e09607562d54765c649cc'

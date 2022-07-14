@@ -68,25 +68,30 @@ const mainController = {
     },
 
     listOrders: async (req: Request, res: Response) => {
-        let model = await models.Order.findAll({ raw: true });
+        try {
+            let model = await models.Order.findAll({ raw: true });
 
-        for (let i in model) {
-            if (model[i].blockchainTransactionId && model[i].status === EOrderStatus.BTC_SENT) {
-                const command = getBitcoinCliCommand(EBitcoinCliCommands.getTransaction) + ` ${model[i].blockchainTransactionId}`;
-                const { stdout, stderr } = await execCommand(command);
-                const confirmations = JSON.parse(stdout).confirmations;
-                if (confirmations >= 40) {
-                    await models.Order.update({ status: EOrderStatus.DONE }, {
-                        where: {
-                            id: model[i].id
-                        }
-                    })
-                } else {
-                    model[i] = { ...model[i], blockchainConfirmations: confirmations };
+            for (let i in model) {
+                if (model[i].blockchainTransactionId && model[i].status === EOrderStatus.BTC_SENT) {
+                    const command = getBitcoinCliCommand(EBitcoinCliCommands.getTransaction) + ` ${model[i].blockchainTransactionId}`;
+                    const { stdout, stderr } = await execCommand(command);
+                    const confirmations = JSON.parse(stdout).confirmations;
+                    if (confirmations >= 40) {
+                        await models.Order.update({ status: EOrderStatus.DONE }, {
+                            where: {
+                                id: model[i].id
+                            }
+                        })
+                    } else {
+                        model[i] = { ...model[i], blockchainConfirmations: confirmations };
+                    }
                 }
             }
+            return res.send(model)
+        } catch (e) {
+            console.error(e);
+            return res.send(400)
         }
-        return res.send(model)
     },
 
     createOrder: async (req: Request, res: Response) => {
