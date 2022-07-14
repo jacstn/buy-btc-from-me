@@ -4,7 +4,7 @@ import { Kraken } from "node-kraken-api";
 import { EBitcoinCliCommands, getBitcoinCliCommand } from '../misc/bitcoin-cli-commands';
 
 const util = require('util');
-const execCommand = util.promisify(require('node:child_process').exec);
+const execCommand = util.promisify(require('child_process').exec);
 const { exec } = require('child_process')
 const models: any = require('./../models')
 
