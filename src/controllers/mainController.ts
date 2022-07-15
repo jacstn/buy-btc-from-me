@@ -90,7 +90,7 @@ const mainController = {
             return res.send(model)
         } catch (e) {
             console.error(e);
-            return res.send(400)
+            return res.send(500)
         }
     },
 
@@ -115,6 +115,7 @@ const mainController = {
 
             return res.send({ btcPrice: price.toFixed(2) })
         } catch (e) {
+            console.error(e)
             return res.sendStatus(500);
         }
     },
