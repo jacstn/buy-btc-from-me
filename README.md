@@ -17,3 +17,5 @@ You need to obtain Omise Keys on www.omise.co
 - Create Database with `npx sequelize-cli db:create`
 - Initialize Database with `npx sequelize-cli db:migrate`
 - Run `npm run dev`
+
+### To be done: _tests_
