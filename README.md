@@ -5,7 +5,7 @@ This is demo project to demonstrate how to integrate Bitcoin Core with  Omise Pa
 _Frontend can be found on https://github.com/jacstn/buy-btc-from-me-frontend_
 
 ## Omise Keys
-You need to obtain Omise Keys on www.omise.co
+You need go through registration process on https://omise.co and optain keys to succesfully run this project.
 
 ## Requirements
  - Mysql database (https://www.mysql.com/downloads)
