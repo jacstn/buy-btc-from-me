@@ -18,4 +18,5 @@ You need go through registration process on https://omise.co and optain keys to 
 - Initialize Database with `npx sequelize-cli db:migrate`
 - Run `npm run dev`
 
-### To be done: _tests_
+## Tests
+ - Run `npm run test` for testing functionalities
