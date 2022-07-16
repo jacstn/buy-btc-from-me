@@ -96,6 +96,7 @@ const mainController = {
 
     createOrder: async (req: Request, res: Response) => {
         const order = { ...req.body, status: EOrderStatus.INIT }
+
         try {
             const model = await models.Order.create(order);
             return res.send({ ...model.dataValues, omisePublicKey: process.env.OMISE_PKEY });
