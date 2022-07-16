@@ -79,3 +79,20 @@ describe('GET /validate-address', () => {
             })
     })
 })
+
+describe('GET /btc-price', () => {
+
+    it('should get current BTC price', function (done) {
+        request(app).get('/btc-price').send()
+            .expect(200)
+            .expect(async (res: any) => {
+                const price = JSON.parse(res.text);
+                expect().instanceOf(Number);
+                done();
+            })
+            .end((err: any, res: any) => {
+                if (err) done(err);
+                else done()
+            })
+    })
+})
